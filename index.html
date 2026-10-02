@@ -1,23 +1,849 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>BusTime — Bus Timetable</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f8fc;color:#14233d}button,input{font:inherit}.nav{height:72px;background:#fff;display:flex;align-items:center;padding:0 4%;gap:30px;box-shadow:0 2px 12px #00000012;position:sticky;top:0;z-index:10}.logo{font-size:24px;font-weight:800;color:#1565e8;display:flex;align-items:center;gap:9px}.logo span{color:#14233d}.navlinks{display:flex;gap:28px;margin:auto}.navlinks a{color:#3b4658;text-decoration:none;font-weight:600}.navlinks a.active{color:#1565e8;border-bottom:3px solid #1565e8;padding-bottom:22px}.hero{min-height:390px;background:linear-gradient(90deg,#07182dcc,#07182d55),url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1800&q=80') center/cover;display:flex;align-items:center;padding:50px 4%}.hero h1{font-size:52px;line-height:1.05;color:#fff;margin:0 0 12px;max-width:650px}.hero p{color:#fff;font-size:20px;margin:0 0 30px}.searchbox{background:#fff;border-radius:18px;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;max-width:1150px;box-shadow:0 15px 35px #0004}.field{border:1px solid #dce3ec;border-radius:12px;padding:12px 15px}.field small{display:block;color:#718096}.field input{border:0;outline:0;width:100%;font-size:17px;font-weight:700;color:#17253c;background:transparent}.search{border:0;background:#1264e8;color:#fff;border-radius:12px;padding:0 25px;font-weight:800;cursor:pointer}.popular{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}.chip{background:#fff;border-radius:30px;padding:9px 15px;color:#23334c;font-weight:700;font-size:14px;cursor:pointer}.wrap{max-width:1250px;margin:28px auto;padding:0 20px}.layout{display:grid;grid-template-columns:280px 1fr;gap:22px}.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 15px #0000000b}.card h3{margin:0 0 14px}.routes div{padding:13px 5px;border-bottom:1px solid #edf0f5;cursor:pointer}.routes div:first-child{color:#1264e8;font-weight:800;background:#edf5ff;border-radius:8px;padding-left:10px}.results-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.results-head h2{margin:0}.bus{background:#fff;border-radius:15px;margin:12px 0;padding:16px;display:grid;grid-template-columns:100px 75px 1fr 90px 105px;align-items:center;gap:14px;box-shadow:0 3px 15px #0000000b}.time{font-size:20px;font-weight:850}.busimg{width:78px;height:46px;object-fit:cover;border-radius:8px}.busname{font-weight:800;font-size:17px}.sub{font-size:13px;color:#718096;margin-top:5px}.tag{display:inline-block;padding:4px 8px;border-radius:6px;background:#e9f2ff;color:#1264e8;font-size:12px;font-weight:800;margin:6px 4px 0 0}.tag.green{background:#e9faef;color:#159447}.fare{font-size:18px;font-weight:850;color:#129447}.details{background:#1264e8;color:#fff;border:0;padding:11px 13px;border-radius:9px;font-weight:800;cursor:pointer}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:25px 0}.feature{padding:20px;border-radius:14px;background:#fff}.feature b{display:block;margin-bottom:5px}.empty{display:none;text-align:center;padding:40px}.footer{text-align:center;padding:35px;color:#748095}@media(max-width:900px){.navlinks{display:none}.searchbox{grid-template-columns:1fr 1fr}.search{height:55px}.layout{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}.bus{grid-template-columns:80px 65px 1fr}.fare,.details{grid-column:auto}.hero h1{font-size:40px}}@media(max-width:600px){.hero{padding:35px 18px}.hero h1{font-size:34px}.searchbox{grid-template-columns:1fr}.search{height:52px}.bus{grid-template-columns:1fr 1fr;padding:13px}.busimg{display:none}.busname{grid-column:1/-1}.features{grid-template-columns:1fr}.nav{padding:0 18px}.wrap{padding:0 12px}}
-</style></head>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8fc;color:#14233d}
+button,input{font:inherit}
+
+.nav{
+height:72px;background:#fff;display:flex;align-items:center;
+padding:0 4%;gap:30px;box-shadow:0 2px 12px #0001;
+position:sticky;top:0;z-index:10
+}
+
+.logo{font-size:24px;font-weight:800;color:#1565e8}
+.logo span{color:#14233d}
+
+.navlinks{display:flex;gap:28px;margin:auto}
+.navlinks a{
+color:#3b4658;text-decoration:none;font-weight:600;cursor:pointer
+}
+.navlinks a:hover{color:#1565e8}
+
+.hero{
+min-height:390px;
+background:
+linear-gradient(90deg,#07182dcc,#07182d55),
+url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1800&q=80')
+center/cover;
+display:flex;align-items:center;padding:50px 4%
+}
+
+.hero h1{
+font-size:52px;line-height:1.05;color:#fff;
+margin:0 0 12px;max-width:650px
+}
+
+.hero p{color:#fff;font-size:20px;margin:0 0 30px}
+
+.searchbox{
+background:#fff;border-radius:18px;padding:12px;
+display:grid;grid-template-columns:1fr 1fr 1fr auto;
+gap:10px;max-width:1150px;
+box-shadow:0 15px 35px #0004
+}
+
+.field{
+border:1px solid #dce3ec;border-radius:12px;padding:12px 15px
+}
+
+.field small{display:block;color:#718096}
+
+.field input{
+border:0;outline:0;width:100%;font-size:17px;
+font-weight:700;color:#17253c;background:transparent
+}
+
+.search{
+border:0;background:#1264e8;color:#fff;
+border-radius:12px;padding:0 25px;
+font-weight:800;cursor:pointer
+}
+
+.popular{
+margin-top:14px;display:flex;gap:10px;flex-wrap:wrap
+}
+
+.chip{
+background:#fff;border:0;border-radius:30px;
+padding:9px 15px;color:#23334c;font-weight:700;
+font-size:14px;cursor:pointer
+}
+
+.wrap{max-width:1250px;margin:28px auto;padding:0 20px}
+
+.layout{
+display:grid;grid-template-columns:280px 1fr;gap:22px
+}
+
+.card{
+background:#fff;border-radius:16px;padding:18px;
+box-shadow:0 3px 15px #0001
+}
+
+.card h3{margin:0 0 14px}
+
+.routes div{
+padding:13px 5px;border-bottom:1px solid #edf0f5;
+cursor:pointer
+}
+
+.routes div:hover{background:#f5f9ff}
+
+.routes div:first-child{
+color:#1264e8;font-weight:800;
+background:#edf5ff;border-radius:8px;padding-left:10px
+}
+
+.results-head{
+display:flex;justify-content:space-between;
+align-items:center;margin-bottom:12px
+}
+
+.results-head h2{margin:0}
+
+.bus{
+background:#fff;border-radius:15px;margin:12px 0;
+padding:16px;display:grid;
+grid-template-columns:100px 75px 1fr 90px 105px;
+align-items:center;gap:14px;
+box-shadow:0 3px 15px #0001
+}
+
+.time{font-size:20px;font-weight:850}
+
+.busimg{
+width:78px;height:46px;border-radius:8px;
+display:flex;align-items:center;
+justify-content:center;background:#eef5ff;font-size:31px
+}
+
+.busname{font-weight:800;font-size:17px}
+
+.sub{font-size:13px;color:#718096;margin-top:5px}
+
+.tag{
+display:inline-block;padding:4px 8px;border-radius:6px;
+background:#e9f2ff;color:#1264e8;
+font-size:12px;font-weight:800;margin:6px 4px 0 0
+}
+
+.tag.green{background:#e9faef;color:#159447}
+
+.fare{
+font-size:18px;font-weight:850;color:#129447
+}
+
+.details{
+background:#1264e8;color:#fff;border:0;
+padding:11px 13px;border-radius:9px;
+font-weight:800;cursor:pointer
+}
+
+.features{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:14px;margin:25px 0
+}
+
+.feature{
+padding:20px;border-radius:14px;background:#fff
+}
+
+.feature b{display:block;margin-bottom:5px}
+
+.empty{
+display:none;text-align:center;padding:40px
+}
+
+.footer{text-align:center;padding:35px;color:#748095}
+
+.modal-bg{
+position:fixed;inset:0;background:#0008;
+display:none;align-items:center;
+justify-content:center;padding:20px;z-index:50
+}
+
+.modal-bg.show{display:flex}
+
+.modal{
+background:#fff;width:min(520px,100%);
+border-radius:18px;padding:24px;
+box-shadow:0 20px 60px #0005;
+position:relative
+}
+
+.modal h2{margin:0 35px 18px 0}
+
+.close{
+position:absolute;right:16px;top:12px;
+border:0;background:#eef3f9;
+width:36px;height:36px;
+border-radius:50%;font-size:22px;cursor:pointer
+}
+
+.info-row{
+padding:10px 0;border-bottom:1px solid #edf0f5
+}
+
+.info-row b{
+display:block;color:#64748b;
+font-size:12px;margin-bottom:3px
+}
+
+@media(max-width:900px){
+
+.navlinks{display:none}
+
+.searchbox{
+grid-template-columns:1fr 1fr
+}
+
+.search{height:55px}
+
+.layout{grid-template-columns:1fr}
+
+.features{
+grid-template-columns:1fr 1fr
+}
+
+.bus{
+grid-template-columns:80px 65px 1fr
+}
+
+.hero h1{font-size:40px}
+
+}
+
+@media(max-width:600px){
+
+.hero{padding:35px 18px}
+
+.hero h1{font-size:34px}
+
+.searchbox{
+grid-template-columns:1fr
+}
+
+.search{height:52px}
+
+.bus{
+grid-template-columns:1fr 1fr;
+padding:13px
+}
+
+.busimg{display:none}
+
+.busname{grid-column:1/-1}
+
+.features{
+grid-template-columns:1fr
+}
+
+.nav{padding:0 18px}
+
+.wrap{padding:0 12px}
+
+.results-head h2{font-size:19px}
+
+}
+</style>
+</head>
+
 <body>
-<nav class="nav"><div class="logo">🚌 Bus<span>Time</span></div><div class="navlinks"><a class="active" href="#">Home</a><a href="#timetable">Time Table</a><a href="#routes">Routes</a><a href="#popular">Popular</a><a href="#about">About</a></div><div>🌙　🔍</div></nav>
-<section class="hero"><div style="width:100%"><h1>Find Your Bus<br>Time Table Easily</h1><p>Check bus timings, routes, stops and plan your journey</p>
-<div class="searchbox"><label class="field"><small>From</small><input id="from" value="Purulia"></label><label class="field"><small>To</small><input id="to" value="Kolkata"></label><label class="field"><small>Date</small><input type="date" id="date"></label><button class="search" onclick="searchBuses()">🔍 Search Buses</button></div>
-<div class="popular" id="popular"><span style="color:#fff;font-weight:800">🔥 Popular Routes:</span><span class="chip" onclick="route('Purulia','Kolkata')">Purulia → Kolkata</span><span class="chip" onclick="route('Purulia','Bankura')">Purulia → Bankura</span><span class="chip" onclick="route('Bankura','Kolkata')">Bankura → Kolkata</span><span class="chip" onclick="route('Durgapur','Kolkata')">Durgapur → Kolkata</span></div></div></section>
-<main class="wrap"><div class="layout"><aside id="routes"><div class="card"><h3>🗺️ Popular Routes</h3><div class="routes"><div onclick="route('Purulia','Kolkata')">Purulia → Kolkata　›</div><div onclick="route('Purulia','Bankura')">Purulia → Bankura　›</div><div onclick="route('Purulia','Durgapur')">Purulia → Durgapur　›</div><div onclick="route('Bankura','Kolkata')">Bankura → Kolkata　›</div><div onclick="route('Asansol','Kolkata')">Asansol → Kolkata　›</div><div onclick="route('Durgapur','Purulia')">Durgapur → Purulia　›</div></div></div><div class="card" style="margin-top:15px"><h3>📍 All Routes</h3><input placeholder="🔍 Search route..." style="width:100%;padding:12px;border:1px solid #ddd;border-radius:9px"></div></aside>
-<section id="timetable"><div class="results-head"><div><h2>🚌 Buses from <span id="titleFrom">Purulia</span> to <span id="titleTo">Kolkata</span></h2><span id="count" style="color:#718096">6 buses found</span></div><div class="card" style="padding:10px 14px">📅 <span id="today">Today</span>⌄</div></div><div id="busList"></div><div id="empty" class="card empty">No buses found for this route.<br>Try another From / To.</div></section></div>
-<div class="features"><div class="feature">🕐 <b>Accurate Time Table</b><span>Updated bus timings</span></div><div class="feature">🔗 <b>All Major Routes</b><span>Find buses for every route</span></div><div class="feature">🚌 <b>Bus Details</b><span>Type, stops, fare and more</span></div><div class="feature">⭐ <b>Easy to Use</b><span>Simple clean interface</span></div></div></main><footer class="footer" id="about">© 2026 BusTime • Community Bus Timetable</footer>
+
+<nav class="nav">
+
+<div class="logo">🚌 Bus<span>Time</span></div>
+
+<div class="navlinks">
+<a href="#home">Home</a>
+<a href="#timetable">Time Table</a>
+<a href="#routes">Routes</a>
+<a href="#popular">Popular</a>
+<a href="#about">About</a>
+</div>
+
+<div>🌙　🔍</div>
+
+</nav>
+
+
+<section class="hero" id="home">
+
+<div style="width:100%">
+
+<h1>
+Find Your Bus<br>
+Time Table Easily
+</h1>
+
+<p>
+Check bus timings, routes, stops and plan your journey
+</p>
+
+
+<div class="searchbox">
+
+<label class="field">
+<small>From</small>
+<input id="from" value="Purulia">
+</label>
+
+<label class="field">
+<small>To</small>
+<input id="to" value="Kolkata">
+</label>
+
+<label class="field">
+<small>Date</small>
+<input type="date" id="date">
+</label>
+
+<button class="search" id="searchBtn">
+🔍 Search Buses
+</button>
+
+</div>
+
+
+<div class="popular" id="popular">
+
+<span style="color:#fff;font-weight:800">
+🔥 Popular Routes:
+</span>
+
+<button class="chip" data-route="Purulia|Kolkata">
+Purulia → Kolkata
+</button>
+
+<button class="chip" data-route="Purulia|Bankura">
+Purulia → Bankura
+</button>
+
+<button class="chip" data-route="Bankura|Kolkata">
+Bankura → Kolkata
+</button>
+
+<button class="chip" data-route="Durgapur|Kolkata">
+Durgapur → Kolkata
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<main class="wrap">
+
+<div class="layout">
+
+
+<aside id="routes">
+
+<div class="card">
+
+<h3>🗺️ Popular Routes</h3>
+
+<div class="routes" id="routeList">
+
+<div data-route="Purulia|Kolkata">
+Purulia → Kolkata　›
+</div>
+
+<div data-route="Purulia|Bankura">
+Purulia → Bankura　›
+</div>
+
+<div data-route="Purulia|Durgapur">
+Purulia → Durgapur　›
+</div>
+
+<div data-route="Bankura|Kolkata">
+Bankura → Kolkata　›
+</div>
+
+<div data-route="Asansol|Kolkata">
+Asansol → Kolkata　›
+</div>
+
+<div data-route="Durgapur|Purulia">
+Durgapur → Purulia　›
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card" style="margin-top:15px">
+
+<h3>📍 All Routes</h3>
+
+<input
+id="routeSearch"
+placeholder="🔍 Search route..."
+style="width:100%;padding:12px;border:1px solid #ddd;border-radius:9px">
+
+</div>
+
+</aside>
+
+
+<section id="timetable">
+
+<div class="results-head">
+
+<div>
+
+<h2>
+🚌 Buses from
+<span id="titleFrom">Purulia</span>
+to
+<span id="titleTo">Kolkata</span>
+</h2>
+
+<span id="count" style="color:#718096">
+6 buses found
+</span>
+
+</div>
+
+<div class="card" style="padding:10px 14px">
+📅 <span id="today">Today</span>
+</div>
+
+</div>
+
+
+<div id="busList"></div>
+
+<div id="empty" class="card empty">
+No buses found for this route.
+<br>
+Try another From / To.
+</div>
+
+</section>
+
+</div>
+
+
+<div class="features">
+
+<div class="feature">
+🕐
+<b>Accurate Time Table</b>
+<span>Updated bus timings</span>
+</div>
+
+<div class="feature">
+🔗
+<b>All Major Routes</b>
+<span>Find buses for every route</span>
+</div>
+
+<div class="feature">
+🚌
+<b>Bus Details</b>
+<span>Type, stops, fare and more</span>
+</div>
+
+<div class="feature">
+⭐
+<b>Easy to Use</b>
+<span>Simple clean interface</span>
+</div>
+
+</div>
+
+</main>
+
+
+<footer class="footer" id="about">
+© 2026 BusTime • Community Bus Timetable
+</footer>
+
+
+<div class="modal-bg" id="modalBg">
+
+<div class="modal">
+
+<button class="close" id="closeModal">
+×
+</button>
+
+<h2 id="modalTitle">
+Bus Details
+</h2>
+
+<div id="modalBody"></div>
+
+</div>
+
+</div>
+
+
 <script>
-const buses=[['05:30 AM','Shyamoli Paribahan','AC Sleeper','Express','Purulia → Bankura → Bardhaman → Kolkata','₹450'],['07:00 AM','SBSTC (Govt.)','Non AC','Ordinary','Purulia → Bankura → Durgapur → Bardhaman → Kolkata','₹320'],['09:15 AM','Green Line Travels','AC Seater','Express','Purulia → Durgapur → Bardhaman → Kolkata','₹480'],['12:00 PM','Shanti Paribahan','AC Sleeper','Express','Purulia → Bankura → Durgapur → Kolkata','₹450'],['02:30 PM','R.S. Travels','Non AC','Express','Purulia → Durgapur → Bardhaman → Kolkata','₹350'],['06:45 PM','Sonar Bangla','AC Seater','Express','Purulia → Bankura → Durgapur → Kolkata','₹500']];
-function render(){let list=document.getElementById('busList');list.innerHTML=buses.map((b,i)=>`<article class="bus"><div class="time">${b[0]}</div><img class="busimg" src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=70"><div><div class="busname">${b[1]}</div><span class="tag">${b[2]}</span><span class="tag green">${b[3]}</span><div class="sub">${b[4]}</div></div><div class="fare">${b[5]}</div><button class="details" onclick="alert('Bus: ${b[1]}\nTime: ${b[0]}\nRoute: ${b[4]}\nFare: ${b[5]}')">View Details</button></article>`).join('')}
-function route(a,b){document.getElementById('from').value=a;document.getElementById('to').value=b;searchBuses()}
-function searchBuses(){let a=document.getElementById('from').value.trim(),b=document.getElementById('to').value.trim();document.getElementById('titleFrom').textContent=a||'Any';document.getElementById('titleTo').textContent=b||'Any';document.getElementById('count').textContent=(a.toLowerCase()==='purulia'&&b.toLowerCase()==='kolkata')?'6 buses found':'Demo route — timetable can be added';document.getElementById('busList').style.display=(a.toLowerCase()==='purulia'&&b.toLowerCase()==='kolkata')?'block':'none';document.getElementById('empty').style.display=(a.toLowerCase()==='purulia'&&b.toLowerCase()==='kolkata')?'none':'block'}
-document.getElementById('date').value=new Date().toISOString().split('T')[0];render();
-</script></body></html>
+
+const data={
+
+"purulia|kolkata":[
+
+["05:30 AM","Shyamoli Paribahan","AC Sleeper","Express",
+"Purulia → Bankura → Bardhaman → Kolkata","₹450"],
+
+["07:00 AM","SBSTC (Govt.)","Non AC","Ordinary",
+"Purulia → Bankura → Durgapur → Bardhaman → Kolkata","₹320"],
+
+["09:15 AM","Green Line Travels","AC Seater","Express",
+"Purulia → Durgapur → Bardhaman → Kolkata","₹480"],
+
+["12:00 PM","Shanti Paribahan","AC Sleeper","Express",
+"Purulia → Bankura → Durgapur → Kolkata","₹450"],
+
+["02:30 PM","R.S. Travels","Non AC","Express",
+"Purulia → Durgapur → Bardhaman → Kolkata","₹350"],
+
+["06:45 PM","Sonar Bangla","AC Seater","Express",
+"Purulia → Bankura → Durgapur → Kolkata","₹500"]
+
+],
+
+"purulia|bankura":[
+
+["06:00 AM","Purulia Local Bus","Non AC","Ordinary",
+"Purulia → Raghunathpur → Bankura","₹80"],
+
+["10:30 AM","Bankura Express","Non AC","Express",
+"Purulia → Hura → Bankura","₹120"],
+
+["04:30 PM","SBSTC","Non AC","Ordinary",
+"Purulia → Indpur → Bankura","₹100"]
+
+],
+
+"purulia|durgapur":[
+
+["07:15 AM","Purulia Durgapur Bus","Non AC","Express",
+"Purulia → Bankura → Durgapur","₹220"],
+
+["01:00 PM","SBSTC","Non AC","Ordinary",
+"Purulia → Bankura → Durgapur","₹180"]
+
+],
+
+"bankura|kolkata":[
+
+["06:30 AM","SBSTC","Non AC","Express",
+"Bankura → Bardhaman → Kolkata","₹250"],
+
+["09:00 AM","Green Line","AC Seater","Express",
+"Bankura → Bardhaman → Kolkata","₹380"],
+
+["03:30 PM","Shanti Paribahan","AC Seater","Express",
+"Bankura → Bardhaman → Kolkata","₹350"]
+
+],
+
+"durgapur|kolkata":[
+
+["06:00 AM","SBSTC","Non AC","Express",
+"Durgapur → Bardhaman → Kolkata","₹180"],
+
+["10:00 AM","Royal Bengal","AC Seater","Express",
+"Durgapur → Bardhaman → Kolkata","₹280"],
+
+["05:30 PM","SBSTC","Non AC","Ordinary",
+"Durgapur → Bardhaman → Kolkata","₹160"]
+
+],
+
+"asansol|kolkata":[
+
+["07:00 AM","SBSTC","Non AC","Express",
+"Asansol → Durgapur → Bardhaman → Kolkata","₹200"],
+
+["02:00 PM","Royal Bengal","AC Seater","Express",
+"Asansol → Durgapur → Kolkata","₹300"]
+
+],
+
+"durgapur|purulia":[
+
+["08:00 AM","Purulia Express","Non AC","Express",
+"Durgapur → Bankura → Purulia","₹220"],
+
+["04:00 PM","SBSTC","Non AC","Ordinary",
+"Durgapur → Bankura → Purulia","₹180"]
+
+]
+
+};
+
+
+const norm=s=>
+s.trim().toLowerCase().replace(/\s+/g," ");
+
+const key=(a,b)=>
+norm(a)+"|"+norm(b);
+
+
+const from=document.getElementById("from");
+const to=document.getElementById("to");
+const date=document.getElementById("date");
+
+const busList=document.getElementById("busList");
+const empty=document.getElementById("empty");
+
+
+function setRoute(a,b){
+
+from.value=a;
+to.value=b;
+
+searchBuses();
+
+document
+.getElementById("timetable")
+.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+}
+
+
+function render(list){
+
+busList.innerHTML=list.map((b,i)=>`
+
+<article class="bus">
+
+<div class="time">
+${b[0]}
+</div>
+
+<div class="busimg">
+🚌
+</div>
+
+<div>
+
+<div class="busname">
+${b[1]}
+</div>
+
+<span class="tag">
+${b[2]}
+</span>
+
+<span class="tag green">
+${b[3]}
+</span>
+
+<div class="sub">
+${b[4]}
+</div>
+
+</div>
+
+<div class="fare">
+${b[5]}
+</div>
+
+<button
+class="details"
+data-index="${i}">
+View Details
+</button>
+
+</article>
+
+`).join("");
+
+
+busList
+.querySelectorAll(".details")
+.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+showDetails(
+list[
+Number(btn.dataset.index)
+]
+);
+
+});
+
+});
+
+}
+
+
+function searchBuses(){
+
+const a=from.value.trim();
+const b=to.value.trim();
+
+const list=data[key(a,b)]||[];
+
+document.getElementById("titleFrom")
+.textContent=a||"Any";
+
+document.getElementById("titleTo")
+.textContent=b||"Any";
+
+document.getElementById("count")
+.textContent=
+list.length+
+(list.length===1?
+" bus found":
+" buses found");
+
+
+if(list.length){
+
+render(list);
+
+busList.style.display="block";
+
+empty.style.display="none";
+
+}else{
+
+busList.innerHTML="";
+
+busList.style.display="none";
+
+empty.style.display="block";
+
+}
+
+}
+
+
+function showDetails(b){
+
+document.getElementById("modalTitle")
+.textContent=b[1];
+
+document.getElementById("modalBody")
+.innerHTML=`
+
+<div class="info-row">
+<b>Departure</b>
+${b[0]}
+</div>
+
+<div class="info-row">
+<b>Bus Type</b>
+${b[2]}
+</div>
+
+<div class="info-row">
+<b>Service</b>
+${b[3]}
+</div>
+
+<div class="info-row">
+<b>Route / Stops</b>
+${b[4]}
+</div>
+
+<div class="info-row">
+<b>Fare</b>
+${b[5]}
+</div>
+
+`;
+
+document
+.getElementById("modalBg")
+.classList.add("show");
+
+}
+
+
+document
+.getElementById("searchBtn")
+.addEventListener("click",searchBuses);
+
+
+document
+.querySelectorAll("[data-route]")
+.forEach(el=>{
+
+el.addEventListener("click",()=>{
+
+const [a,b]=
+el.dataset.route.split("|");
+
+setRoute(a,b);
+
+});
+
+});
+
+
+document
+.getElementById("closeModal")
+.addEventListener("click",()=>{
+
+document
+.getElementById("modalBg")
+.classList.remove("show");
+
+});
+
+
+document
+.getElementById("modalBg")
+.addEventListener("click",e=>{
+
+if(e.target.id==="modalBg"){
+
+e.target.classList.remove("show");
+
+}
+
+});
+
+
+document
+.getElementById("routeSearch")
+.addEventListener("input",e=>{
+
+const q=norm(e.target.value);
+
+document
+.querySelectorAll("#routeList div")
+.forEach(el=>{
+
+el.style.display=
+!q ||
+norm(el.textContent).includes(q)
+?"block":"none";
+
+});
+
+});
+
+
+date.value=
+new Date().toISOString().split("T")[0];
+
+searchBuses();
+
+</script>
+
+</body>
+</html>
